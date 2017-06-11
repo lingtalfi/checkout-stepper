@@ -79,10 +79,6 @@ if ('undefined' === typeof window.CheckoutStepper) {
     window.CheckoutStepper.prototype = {
         openStep: function (stepNumber) {
             var zis = this;
-            // first set all done steps
-            for (var i = stepNumber; i > 0; i--) {
-                this.doneStates[i] = true;
-            }
 
 
             // open the step
@@ -116,6 +112,9 @@ if ('undefined' === typeof window.CheckoutStepper) {
                     }
                 }
             }
+        },
+        markStepAsDone: function (stepNumber) {
+            this.doneStates[stepNumber] = true;
         }
     };
 }

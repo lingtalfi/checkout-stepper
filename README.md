@@ -33,6 +33,11 @@ How to?
             display: none;
         }
 
+        .checkout-stepper > div.step-open {
+            background: rgba(0, 255, 0, 0.3);
+
+        }
+
     </style>
 </head>
 
@@ -70,6 +75,7 @@ How to?
 
 
 <div id="api-demo-buttons">
+    <button class="markdone" data-id="1">Mark step 1 as done</button>
     <button class="open" data-id="1">Open step 1</button>
     <button class="open" data-id="2">Open step 2</button>
     <button class="open" data-id="3">Open step 3</button>
@@ -90,9 +96,10 @@ How to?
             var stepNumber = jTarget.attr("data-id");
             if (jTarget.hasClass("open")) {
                 stepper.openStep(stepNumber);
+                stepper.markStepAsDone(stepNumber);
             }
-            else if (jTarget.hasClass("update")) {
-                stepper.updateStep(stepNumber);
+            else if (jTarget.hasClass("markdone")) {
+                stepper.markStepAsDone(stepNumber);
             }
             return false;
         });
@@ -136,38 +143,31 @@ The three possible states are:
 
 Typically, a step starts with the notset state.
 Then you open it, and it switches to the open state.
-From there the only state it can go to is the done state.
+From when the user successfully complete the step, it's marked as done (i.e. done state).
  
  
-To create a step, you need to create a html div with class step-$n,
+To create a step, you need to create a html element (like a div for instance) with class step-$n,
 where $n is the number of the step, starting at 1, and being continuously +1 incremented (i.e. 
 you can't create discontinuous steps otherwise it won't work),
 and also class step-$state, where $state is one of the possible states.
 
-This mean you need to create 3 html blocks per step (one for each state).
+This mean you need to create 3 html elements per step (one for each state).
 
 Once you've done your markup right (see the above example for a quickstart), 
-the CheckoutStepper object will handle the rest for you.
+the CheckoutStepper object is ready to help you.
 
-You just need to call the openStep method whenever you wish to open a step.
+You just call the openStep method whenever you wish to open a step.
 
-When you open a step, every previous step implicitly receives the done step.
+This method will open the step you want, and put all the other steps in either the done state, or the notset state,
+depending on whether or not the step previously reached the done step.
 
-This means your gui must guide your users through the steps, one by one, and in order.
+For instance if you have 3 steps and you open step 2, 
+then step 2 is open,
 
-Gui wise, the user should be able to go back to a previous step and edit it.
+step 1 is switched to done if it was in the done state, or it switches to notset otherwise.
+Same for step 3.
 
-When she does so, you can use the openStep method to open the relevant step.
-
-This system logic is quite peculiar, but there is a logic behind at least, and you might have a better understanding
-of it by playing the above example in your browser.
-
-
-
-
- 
- 
- 
+To mark a step as done, use the markStepAsDone method.
 
 
 
@@ -176,3 +176,9 @@ of it by playing the above example in your browser.
 
 
 
+History Log
+------------------    
+    
+- 1.0.0 -- 2017-06-11
+
+    - initial commit
